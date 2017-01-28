@@ -30,8 +30,15 @@ class Repositories:
                 PushedAt=r['pushed_at'],
                 UpdatedAt=r['updated_at'],
                 CheckedAt="{0:%Y-%m-%dT%H:%M:%SZ}".format(now)))
+            repo = self.db['Repositories'].find_one(IdOnGitHub=r['id'])
+            self.db_repo['Counts'].insert(dict(
+                RepositoryId=repo['Id'],
+                Forks=r['forks_count'],
+                Stargazers=r['stargazers_count'],
+                Watchers=r['watchers_count'],
+                Issues=r['open_issues_count']))
         self.db_repo.commit()
-        self.lang.update_local_db()
+#        self.lang.update_local_db()
         return diff_repos
 
     def __get_repos_diff(self):
